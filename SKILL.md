@@ -1,7 +1,7 @@
 ---
 name: 聪明钱交易者
 description: >
-  DEX 聪明钱交易策略（v1.0.0）。每 15 分钟扫描 Solana 链上聪明钱信号，
+  DEX 聪明钱交易策略（v1.0.0）。每 10 分钟扫描 Solana 链上聪明钱信号，
   结合动量突破确认和 13 项安全检查，执行激进 DEX 现货交易。支持动态仓位、
   分层止盈、移动止损和全持仓管理。必须使用 onchainOS 作为主要信息源和交易工具。
   触发词：聪明钱策略、smart money、smart money trader、聪明钱交易者、
@@ -28,7 +28,7 @@ metadata:
 
 > ⚠️ **免责声明**：本策略为第三方社区作品，**不代表 OKX 官方立场或产品**，仅通过 onchainOS CLI 访问链上数据和执行 DEX 交易，不构成投资建议。
 >
-> 扫描 Solana 链上聪明钱信号，每 15 分钟触发一次，结合动量确认，执行激进 DEX 现货交易。
+> 扫描 Solana 链上聪明钱信号，每 10 分钟触发一次，结合动量确认，执行激进 DEX 现货交易。
 
 ---
 
@@ -86,7 +86,7 @@ metadata:
 ## 执行流程总览
 
 ```
-每 15 分钟触发
+每 10 分钟触发
     │
     ▼
 ① 采集聪明钱信号（onchainOS）
@@ -223,14 +223,14 @@ onchainos token phishing-check <token_address> --chain solana
 # 获取代币价格信息
 onchainos token price-info <token_address> --chain solana
 
-# 获取 15 分钟 K 线（最近 1 小时）
+# 获取 10 分钟 K 线（最近 1 小时）
 onchainos market kline <token_address> --chain solana --bar 15m --limit 4
 ```
 
 **动量条件**（满足任一即确认，AI 自动判断）：
 
-1. 价格 15 分钟涨幅 ≥ 5%
-2. 成交量 15 分钟放大 ≥ 2 倍
+1. 价格 10 分钟涨幅 ≥ 5%
+2. 成交量 10 分钟放大 ≥ 2 倍
 3. 最近 1 小时 K 线连续 3 根阳线
 
 **未通过动量确认的代币**：记录原因，跳过。
@@ -388,12 +388,12 @@ current_pnl_pct = (current_price - entry_price) / entry_price * 100
 
 ## 定时任务注册
 
-使用 `openclaw cron add` 注册 15 分钟定时触发：
+使用 `openclaw cron add` 注册 10 分钟定时触发：
 
 ```bash
 openclaw cron add \
   --name "聪明钱交易者" \
-  --schedule "kind=cron,expr=*/15 * * * *,tz=Asia/Shanghai" \
+  --schedule "kind=cron,expr=*/10 * * * *,tz=Asia/Shanghai" \
   --payload '{"kind":"agentTurn","message":"执行聪明钱交易者策略，扫描 Solana 聪明钱信号，执行激进 DEX 交易","sessionTarget":"isolated"}' \
   --delivery '{"mode":"none"}'
 ```
@@ -430,7 +430,7 @@ openclaw cron add \
    📈 本小时：<hourly_trades>/2 笔 | 今日：<daily_trades>/10 笔
    💰 当前持仓：<positions>/5 个
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⏰ 下次扫描：15 分钟后
+⏰ 下次扫描：10 分钟后
 ⚠️ 风险提示：本策略激进，仅供研究学习
 ```
 
@@ -456,7 +456,7 @@ openclaw cron add \
    📈 本小时：0/2 笔 | 今日：<daily_trades>/10 笔
    💰 当前持仓：<positions>/5 个
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⏰ 下次扫描：15 分钟后
+⏰ 下次扫描：10 分钟后
 ```
 
 ---

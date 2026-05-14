@@ -1,6 +1,6 @@
 # 🧠 聪明钱交易者 (Smart Money Trader)
 
-> 基于链上聪明钱信号驱动的 DEX 激进交易策略，每 15 分钟扫描 Solana 链上聪明钱钱包动向，执行智能现货交易。
+> 基于链上聪明钱信号驱动的 DEX 激进交易策略，每 10 分钟扫描 Solana 链上聪明钱钱包动向，执行智能现货交易。
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Version](https://img.shields.io/badge/version-1.0.0-green.svg)
@@ -58,7 +58,7 @@ onchainos wallet status
 ```bash
 openclaw cron add \
   --name "聪明钱交易者" \
-  --schedule "kind=cron,expr=*/15 * * * *,tz=Asia/Shanghai" \
+  --schedule "kind=cron,expr=*/10 * * * *,tz=Asia/Shanghai" \
   --payload '{"kind":"agentTurn","message":"执行聪明钱交易者策略，profile=demo","sessionTarget":"isolated"}' \
   --delivery '{"mode":"none"}'
 ```
@@ -68,7 +68,7 @@ openclaw cron add \
 ## 📊 策略流程
 
 ```
-每 15 分钟触发
+每 10 分钟触发
     │
     ▼
 ① 采集聪明钱信号（onchainOS signal list）
@@ -84,7 +84,7 @@ openclaw cron add \
     │
     ▼
 ④ 动量确认（价格 + 成交量）
-    │ 价格 15 分钟涨幅 ≥ 5% 或成交量放大 ≥ 2 倍
+    │ 价格 10 分钟涨幅 ≥ 5% 或成交量放大 ≥ 2 倍
     │
     ▼
 ⑤ 风控检查（频率 + 熔断）
